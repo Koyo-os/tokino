@@ -101,7 +101,7 @@ func (b *BlockChain) RouteCommand(cmd string) error {
 }
 
 
-func (b *BlockChain) AddBlock(data string, prev string, index int) (bool, error) {
+func (b *BlockChain) AddBlock(prev string, tx models.Transaction, index int) (bool, error) {
 	b.logger.Info().Msg("starting check new block")
 
 	last,err := b.data.GetLast()
@@ -110,7 +110,7 @@ func (b *BlockChain) AddBlock(data string, prev string, index int) (bool, error)
 	}
 
 	if last.SelfHash == prev {
-		block := models.NewBlock(index, data, prev)
+		block := models.NewBlock(index, tx, prev)
 		b.data.Add(block)
 		b.blocks = append(b.blocks, block)
 		b.logger.Info().Msg("check successfully!")

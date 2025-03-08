@@ -47,7 +47,7 @@ func (b *Block) MineBlock() {
 }
 
 func (b *Block) CalculateHash() string {
-	blockData := string(b.Index) + b.CreatedAt + b.Data + b.PrevHash
+	blockData := string(b.Index) + b.CreatedAt + b.PrevHash
 	hash := sha256.Sum256([]byte(blockData))
 	return hex.EncodeToString(hash[:])
 }

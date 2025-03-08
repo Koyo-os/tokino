@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 
 	"github.com/koyo-os/tokino/src/db"
@@ -88,6 +89,15 @@ func (b *BlockChain) Start() {
 	signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM)
 	<-ch
 	b.logger.Info().Msg("stop...")
+}
+
+func (b *BlockChain) RouteCommand(cmd string) error {
+	comand := strings.Split(cmd, " ")
+	if comand[0] == "create" {
+		if len(comand) < 4 {
+			fmt.Println("Usage: send to from price")
+		}
+	}
 }
 
 

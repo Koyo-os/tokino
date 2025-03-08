@@ -9,11 +9,28 @@ import (
 
 const difficulty = 4
 
+type Transaction struct {
+	ID      string
+	Inputs  []TxInput
+	Outputs []TxOutput
+}
+
+type TxInput struct {
+	TxID      string
+	OutIdx    int
+	Signature string
+}
+
+type TxOutput struct {
+	Value  int
+	PubKey string
+}
+
 type Block struct{
 	ID        uint  `gorm:"primaryKey;autoIncrement"`
 	PrevHash string
 	SelfHash string
-	Data string
+	Transaction Transaction
 	Index int
 	Nonce int
 	CreatedAt string
@@ -35,10 +52,23 @@ func (b *Block) CalculateHash() string {
 	return hex.EncodeToString(hash[:])
 }
 
-func NewBlock(index int, data string, prev string) *Block {
+func CreateTransaction(sender, receiver string, amount int) Transaction {
+	return Transaction{
+		ID: "tx1",
+		Inputs: []TxInput{
+			{TxID: "genesis", OutIdx: 0, Signature: "sig"},
+		},
+		Outputs: []TxOutput{
+			{Value: amount, PubKey: receiver},
+			{Value: 90, PubKey: sender}, // Сдача
+		},
+	}
+}
+
+func NewBlock(index int, tx Transaction, prev string) *Block {
 	block := &Block{
 		Index: index,
-		Data: data,
+		Transaction: tx,
 		PrevHash: prev,
 		CreatedAt: time.Now().GoString(),
 		Nonce: 0,
